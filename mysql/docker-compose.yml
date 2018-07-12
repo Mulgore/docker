@@ -1,0 +1,30 @@
+version: '2'
+services:
+  master:
+    image: mysql:5.7
+    container_name: master
+    ports:
+      - '13306:3306'
+    volumes:
+      - ./master/conf:/etc/mysql/conf.d
+      - ./master/logs:/logs
+      - ./master/data:/var/lib/mysql
+      - ./master/init:/docker-entrypoint-initdb.d/
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+  cluster:
+    image: mysql:5.7
+    container_name: cluster
+    ports:
+      - '13307:3306'
+    volumes:
+      - ./cluster/conf:/etc/mysql/conf.d
+      - ./cluster/logs:/logs
+      - ./cluster/data:/var/lib/mysql
+      - ./cluster/init:/docker-entrypoint-initdb.d/
+    links:
+      - master
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root

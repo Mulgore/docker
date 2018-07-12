@@ -1,0 +1,19 @@
+version: '2'
+services:
+  tomcat:
+    image: tomcat:8.5
+    ports:
+      - '8083:8080'
+    restart: always
+    container_name: tomcat
+  nginx:
+    image: nginx
+    links:
+      - tomcat:tomcat
+    ports:
+      - '80:80'
+    volumes:
+      - ./conf.d:/etc/nginx/conf.d
+      - ./log:/var/log/nginx
+    restart: always
+    container_name: nginx
